@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Duck Duck Search</title>
+    <meta charset="utf-8" />
+
+    <style>
+      .input-field {
+        width: 40vw;
+      }
+
+      .search-form {
+        padding:10px;
+        position: fixed;
+        top: 10%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color:black;
+        border-radius:25px;
+      }
+    </style>
+
+    <script src="../testing.js"></script>
+    <script id="logic">
+      const generateSearchURLTests = [
+        {
+          name: "first",
+          args: ["asdf"],
+          expected: generateSearchURL("asdf")
+        },
+        {
+          name: "second",
+          args: ["fdsa"],
+          expected: generateSearchURL("fdsa")
+        },
+        {
+          name: "third",
+          args: ["tor browser"],
+          expected: generateSearchURL("tor browser")
+        },
+        {
+          name: "fourth",
+          args: ["const x = null;"],
+          expected: generateSearchURL("const x = null;")
+        },
+        {
+          name: "fifth",
+          args: ["==-+_ *&^*<>diso }{[si"],
+          expected: generateSearchURL("==-+_ *&^*<>diso }{[si")
+        }
+      ];
+
+      function generateSearchURL(searchQuery) {
+        const encodedQuery = encodeURIComponent(searchQuery);
+        const searchURL = "https://duckduckgo.com/?q=" + encodedQuery;
+        return searchURL;
+      }
+
+      testing(generateSearchURL, generateSearchURLTests);
+    </script>
+    <script id="handler">
+      function searchHandler(event) {
+        debugger;
+        // read & process user input
+        const form = event.target.form;
+        const userInput = form.query.value;
+
+        // execute core logic
+        const encodedQuery = encodeURIComponent(userInput);
+        const searchURL = "https://duckduckgo.com/?q=" + encodedQuery;
+
+        // communicate result to user
+        window.open(searchURL, "_blank");
+
+        // log action for developers
+        console.log("\n-- user action --");
+        console.log("userInput:", "(" + typeof userInput + ")", userInput);
+        console.log("searchURL:", "(" + typeof searchURL + ")", searchURL);
+
+        // tell the browser everything is OK
+        return true;
+      }
+    </script>
+  </head>
+
+  <body>
+    <section id="user-interface">
+      <form class="search-form">
+        <input type="search" name="query" class="input-field" />
+        <button type="button" id="user-action">DuckDuckSearch</button>
+      </form>
+    </section>
+
+    <script id="listener">
+      document
+        .getElementById("user-action")
+        .addEventListener("click", searchHandler);
+    </script>
+  </body>
+</html>
